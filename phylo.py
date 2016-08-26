@@ -28,8 +28,11 @@ def L0(data, tree, Q):
             L_right = L[:, :, right_index]
             t_left = left_child.dist
             t_right = right_child.dist
-            P_left = expm(t_left*Q)
-            P_right = expm(t_right*Q)
+            try:
+                P_left = expm(t_left*Q)
+                P_right = expm(t_right*Q)
+            except ValueError:
+                raise Exception('Could not compute matrix exponentials!')
             L[:, :, index] = np.dot(P_left, L_left) * np.dot(P_right, L_right)
         if node.is_root():
             return L[:,:,0]
@@ -54,5 +57,12 @@ def f81(pi):
                   [piA, piG, piC, 0  ]])
     np.fill_diagonal(Q, -np.sum(Q, 1))
     Q /= beta
+    return Q
+
+def jc69(mu):
+    Q =  (1/3)*np.array([[-3*mu, mu, mu, mu],
+                         [mu, -3*mu, mu, mu],
+                         [mu, mu, -3*mu, mu],
+                         [mu, mu, mu, -3*mu]])
     return Q
     
