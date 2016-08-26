@@ -61,7 +61,10 @@ def mutate_sequence(sequence, Q, l):
 def phylogenetic_tree(extant_taxa, branch_lengths=(.01, .5)):
     names_as_strings = [str(i) for i in range(extant_taxa)]
     tree = PhyloTree(format=1)
-    tree.populate(extant_taxa, random_branches=branch_lengths, names_library=names_as_strings)
+    tree.populate(extant_taxa,
+                  random_branches=True,
+                  branch_range=branch_lengths,
+                  names_library=names_as_strings)
     tree.dist = 0
     current_name = 2*extant_taxa-2
     for node in tree.traverse('preorder'):
