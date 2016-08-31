@@ -14,6 +14,7 @@ from itertools import product
 
 nucleotides_list = ('A', 'G', 'C', 'T')
 nucleotides = np.array(nucleotides_list, dtype='<U1')
+nucleotide_to_index = {'A':0, 'G':1, 'C':2, 'T':3}
 
 to_string = lambda X: ''.join(X)
 triplets = list(product(*3*(nucleotides_list,)))
@@ -30,12 +31,30 @@ amino_acids.sort()
 amino_acids = np.array(amino_acids, dtype='<U1')
 amino_acid_string = lambda X: to_string(amino_acids[X])
 
+degeneracy = np.zeros(20, dtype=np.int)
+for codon in codons:
+    amino_acid = translate(codon)
+    amino_acid_index = amino_acids.tolist().index(amino_acid)
+    degeneracy[amino_acid_index] += 1
+
+codon_index_to_amino_acid_index = np.zeros(61, dtype=np.int)
+for i, codon in enumerate(codons):
+    amino_acid = translate(codon)
+    amino_acid_index = amino_acids.tolist().index(amino_acid)
+    codon_index_to_amino_acid_index[i] = amino_acid_index
+
+
 def random_sequence(sequence_length, distribution):
     number_of_units = len(distribution)
     sequence = np.random.choice(number_of_units,
                                 size=sequence_length,
                                 p=distribution)
     return sequence
+
+
+def amino_acid_vec_to_codon_vec(amino_acid_vec):
+    codon_vec = amino_acid_vec[codon_index_to_amino_acid_index]
+    return codon_vec
 
 
 def mutate_sequence(sequence, Q, l):
