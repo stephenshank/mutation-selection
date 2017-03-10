@@ -7,6 +7,7 @@ Created on Thu Mar  9 15:16:38 2017
 """
 
 import pickle
+import sys
 
 import numpy as np
 import scipy.optimize as spop
@@ -169,4 +170,7 @@ def run_experiment(seed):
 
 
 if __name__ == '__main__':
-    run_experiment(0)
+    lower = int(sys.argv[1])
+    upper = int(sys.argv[2])
+    for i in range(lower, upper):
+        run_experiment(i)
